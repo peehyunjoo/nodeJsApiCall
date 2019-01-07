@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  </head>
+  <style>
+    .btn-primary{
+      background-color:#003d33;
+      border-color:#439889;
+    }
+    .btn-primary:hover{
+      background-color:#439889;
+      border-color:#439889;
+    }
+  </style>
+  <script>
+    $(document).ready(function(){
+      $("#method").change(function(){
+        var method = $(this).val();
+        $("#method").val(method);
+
+        for(var i = 0 ;i <3; i++){
+          if($("#method option").eq(i).val() == method){
+            $("#method option").eq(i).attr("selected",true);
+            $("#method option").not(':eq('+i+')').attr("selected",false);
+          }
+        }
+
+        var type = $(this).val();
+        $("#type").val(type);
+
+        for(var i = 0 ;i <3; i++){
+          if($("#type option").eq(i).val() == level){
+            $("#type option").eq(i).attr("selected",true);
+            $("#type option").not(':eq('+i+')').attr("selected",false);
+          }
+        }
+      });
+    });
+    function ajax(){
+      var body = $("#body").val();
+      var type = $("#type").val();
+      var url = $("#url").val();
+      var method = $("#method").val();
+      console.log(url);
+      console.log(type);
+      $.ajax({
+        url: '/restApi',
+        dataType: 'json',
+        type: 'POST',
+        data: {url:url, body:body, type: type, method: method},
+        success: function(result) {
+          if (result) {
+           $('#result').html(result.method);
+          }
+        }
+      });
+    }
+  </script>
+  <body>
+    <%if(user.user_id === "undefined"){%>
+      <script>
+        window.location.href='/';
+      </script>
+    <%}%>
+  <nav class="nav">
+      <h3 style="color:white;">Pizzu's API RESPONSE</h3>
+      <a href="/logout" style="color:white;"><%=user.user_id%> 님 <i class="fas fa-sign-out-alt fa-1x"></i></a>
+  </nav>
+  <div class="container" style="padding-top:4%;">
+
+    <form role="form" method="post" action="/restApi" onsubmit="ajax();return false;">
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <b>METHOD</b>
+          <select id="method" name="method" id="method" class="form-control from-control-sm">
+            <option value="GET" selected="selected">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+          </select>
+        </div>
+        <div class="form-group col-md-9">
+          <b>REQUEST URL</b>
+          <input class="form-control" type="text" id="url" name="url" placeholder="request url">
+        </div>
+        <div class="form-group col-md-1">
+          <b>call</b>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <b>OPTION</b>
+          <select id="type" name="type" id="type" class="form-control from-control-sm">
+            <option value="json" selected="selected">JSON</option>
+            <option value="xml">XML</option>
+            <option value="text">TEXT</option>
+          </select>
+        </div>
+        <div class="form-group col-md-9">
+          <b>REQUEST BODY</b>
+          <input class="form-control" type="text" name="body" id="body" placeholder="request body">
+        </div>
+      </div>
+    </form>
+      <div id="result"></div>
+      <h3 style="padding-top:4%;">RESPONSE DATA</h3>
+      <hr>
+
+      <div class="form-row">
+          <b style="float:left;">STATUS CODE : </b>&nbsp; <h3 style="color:green;">200OK</h3>
+      </div>
+      <div class="form-row" style="padding-top:3%;">
+        <b>RESPONSE BODY</b>
+        <div id="div_body"></div>
+      </div>
+  </div>
+
+</body>
+</html>

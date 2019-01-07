@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  </head>
+  <%if(user.user_id){%>
+    <script>
+      window.location.href='main';
+    </script>
+  <%}%>
+  <body>
+    <nav class="nav">
+        <h3 style="color:white;">Pizzu's API RESPONSE</h3>
+    </nav>
+    <div class="container">
+        <div class="col-md-6 offset-md-3">
+    			<div class="login-panel panel panel-default">
+    				<div class="panel-body">
+    					<form role="form" action="/login" method="post">
+    						<fieldset>
+    							<div class="form-group">
+    								<input class="form-control" placeholder="ID" name="id" type="text" autofocus="">
+    							</div>
+    							<div class="form-group">
+    								<input class="form-control" placeholder="PASSWORD" name="pwd" type="password" value="">
+    							</div>
+    							<button type="submit" class="btn btn-primary" style="width:100%;background-color : #003d33; font-size:1.2em;">LOGIN</button>
+    							<div class="checkbox" style="text-align: center;">
+    						</div>
+    					</fieldset>
+    				</form>
+    			</div>
+    		</div>
+	     </div>
+     </div>
+  </body>
+
+</html>
