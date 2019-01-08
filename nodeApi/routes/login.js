@@ -30,7 +30,16 @@ exports.login = function (req, res) {
 };
 
 exports.logout = function (req, res) {
-  console.log(req.session);
+  /*console.log(req.session);
     req.session.destroy;
+    res.redirect('/');*/
+
+    if(req.session.user_id) {
+    req.session.destroy(function (err) {
+      if(err) console.error('err', err);
+      res.redirect('/');
+    });
+  } else {
     res.redirect('/');
+  }
 };

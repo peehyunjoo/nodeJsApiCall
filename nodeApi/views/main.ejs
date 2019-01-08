@@ -33,7 +33,7 @@
         $("#type").val(type);
 
         for(var i = 0 ;i <3; i++){
-          if($("#type option").eq(i).val() == level){
+          if($("#type option").eq(i).val() == type){
             $("#type option").eq(i).attr("selected",true);
             $("#type option").not(':eq('+i+')').attr("selected",false);
           }
@@ -43,18 +43,27 @@
     function ajax(){
       var body = $("#body").val();
       var type = $("#type").val();
-      var url = $("#url").val();
+      var host = $("#host").val();
+      var path = $("#path").val();
       var method = $("#method").val();
-      console.log(url);
-      console.log(type);
+      console.log(host);
+      console.log(path);
       $.ajax({
         url: '/restApi',
         dataType: 'json',
         type: 'POST',
-        data: {url:url, body:body, type: type, method: method},
+        data: {host:host, path:path, body:body, type: type, method: method},
         success: function(result) {
           if (result) {
-           $('#result').html(result.method);
+           $('.statusCode').html(result.statusCode);
+           $("#headers").html("date : "+result.headers.date);
+           $("#headers").append("allow : "+result.headers.allow);
+           var json = JSON.stringify(JSON.parse(result.resdata),null,2);
+           console.log(result.headers);
+           console.log(json);
+           $("#div_body").html(json);
+           //$("#div_body").html(result.resdata);
+           //console.log(result);
           }
         }
       });
@@ -82,9 +91,13 @@
             <option value="PUT">PUT</option>
           </select>
         </div>
-        <div class="form-group col-md-9">
-          <b>REQUEST URL</b>
-          <input class="form-control" type="text" id="url" name="url" placeholder="request url">
+        <div class="form-group col-md-5">
+          <b>REQUEST HOST</b>
+          <input class="form-control" type="text" id="host" name="host" placeholder="request host">
+        </div>
+        <div class="form-group col-md-4">
+          <b>REQUEST PATH</b>
+          <input class="form-control" type="text" id="path" name="path" placeholder="/request path">
         </div>
         <div class="form-group col-md-1">
           <b>call</b>
@@ -112,11 +125,19 @@
       <hr>
 
       <div class="form-row">
-          <b style="float:left;">STATUS CODE : </b>&nbsp; <h3 style="color:green;">200OK</h3>
+          <b style="float:left;">STATUS CODE : </b>&nbsp; <h3 class="statusCode" style="color:green;"></h3>
       </div>
       <div class="form-row" style="padding-top:3%;">
+        <b>HEADERS</b>
+        <div id="headers">
+
+        </div>
+      </div>
+      <div class="form-row" style="padding-top:2%;">
         <b>RESPONSE BODY</b>
-        <div id="div_body"></div>
+        <div id="div_body">
+
+        </div>
       </div>
   </div>
 
