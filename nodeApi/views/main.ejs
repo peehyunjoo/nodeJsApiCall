@@ -28,7 +28,9 @@
             $("#method option").not(':eq('+i+')').attr("selected",false);
           }
         }
+      });
 
+      $("#type").change(function(){
         var type = $(this).val();
         $("#type").val(type);
 
@@ -46,8 +48,7 @@
       var host = $("#host").val();
       var path = $("#path").val();
       var method = $("#method").val();
-      console.log(host);
-      console.log(path);
+
       $.ajax({
         url: '/restApi',
         dataType: 'json',
@@ -56,12 +57,19 @@
         success: function(result) {
           if (result) {
            $('.statusCode').html(result.statusCode);
-           $("#headers").html("date : "+result.headers.date);
-           $("#headers").append("allow : "+result.headers.allow);
-           var json = JSON.stringify(JSON.parse(result.resdata),null,2);
-           console.log(result.headers);
-           console.log(json);
-           $("#div_body").html(json);
+           //$("#headers").html("date : "+result.headers.date);
+           //$("#headers").append("allow : "+result.headers.allow);
+           $("#headers").append("content-type : "+result.headers['content-type']);
+           if(result.headers['content-type'] == "application/json"){
+              var resdata = JSON.stringify(JSON.parse(result.resdata),null,2);
+           }else{
+             var resdata = result.resdata;
+           }
+           $("#div_body").text(resdata);
+           //console.log(result.headers);
+           console.log(resdata);
+
+
            //$("#div_body").html(result.resdata);
            //console.log(result);
           }
@@ -70,7 +78,7 @@
     }
   </script>
   <body>
-    <%if(user.user_id === "undefined"){%>
+    <%if(user.user_id == null){%>
       <script>
         window.location.href='/';
       </script>
@@ -109,9 +117,9 @@
         <div class="form-group col-md-2">
           <b>OPTION</b>
           <select id="type" name="type" id="type" class="form-control from-control-sm">
-            <option value="json" selected="selected">JSON</option>
-            <option value="xml">XML</option>
-            <option value="text">TEXT</option>
+            <option value="JSON" selected="selected">JSON</option>
+            <option value="XML">XML</option>
+            <option value="TEXT">TEXT</option>
           </select>
         </div>
         <div class="form-group col-md-9">
