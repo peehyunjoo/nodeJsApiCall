@@ -23,12 +23,17 @@ exports.post = function (req, res,next) {
     }else{
       var port ="443";
     }
-    console.log(port);
+    console.log(body);
     var options = {
         hostname: host[1],
         path: path,
         port:port,
-        method:method
+        method:method,
+        headers : {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'Content-Length': body.length
+    }
       };
 
     function handleResponse(response) {
@@ -46,13 +51,18 @@ exports.post = function (req, res,next) {
     }
 
     if(port === "443"){
-      https.request(options, function(response){
+      post_req  =https.request(options, function(response){
           handleResponse(response);
-      }).end();
+      });
+      post_req.write(body);
+      post_req.end();
     }else if(port ==="80"){
-      http.request(options, function(response){
+      post_req  = http.request(options, function(response){
         handleResponse(response);
-      }).end();
+      });
+      post_req.write(body);
+      post_req.end();
+
     }
 
 }

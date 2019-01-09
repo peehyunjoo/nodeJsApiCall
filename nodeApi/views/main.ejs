@@ -59,7 +59,7 @@
            $('.statusCode').html(result.statusCode);
            //$("#headers").html("date : "+result.headers.date);
            //$("#headers").append("allow : "+result.headers.allow);
-           $("#headers").append("content-type : "+result.headers['content-type']);
+           $("#headers").html("content-type : "+result.headers['content-type']);
            if(result.headers['content-type'] == "application/json"){
               var resdata = JSON.stringify(JSON.parse(result.resdata),null,2);
            }else{
