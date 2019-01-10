@@ -5,6 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   </head>
   <style>
     .btn-primary{
@@ -14,6 +15,13 @@
     .btn-primary:hover{
       background-color:#439889;
       border-color:#439889;
+    }
+    .modal-dialog{
+      margin-top:9%;
+    }
+    .modal-content{
+      background-color:#439889;
+      color:#fff;
     }
   </style>
   <script>
@@ -30,6 +38,11 @@
         }
       });
 
+      $(".close").click(function(){
+        $(".modal").css("display","none");
+        $("#alert").attr("class","modal fade");
+      });
+
       $("#type").change(function(){
         var type = $(this).val();
         $("#type").val(type);
@@ -43,12 +56,20 @@
       });
     });
     function ajax(){
+
       var body = $("#body").val();
       var type = $("#type").val();
       var host = $("#host").val();
       var path = $("#path").val();
       var method = $("#method").val();
 
+      if(host == "" || host == null){
+        $(".modal").css("display","block");
+        $(".modal").attr("class","modal");
+        $("#exampleModalLabel").html("경고창");
+        $(".modal-body").html("값을 입력해주세요.");
+        return false;
+      }
       $.ajax({
         url: '/restApi',
         dataType: 'json',
@@ -75,6 +96,33 @@
           }
         }
       });
+    }
+
+    function copy(){
+      var host = $("#host").val();
+      var path = $("#path").val();
+      var method = $("#method").val();
+      var type =  $("#type").val();
+      var body =  $("#body").val();
+
+      if(method == "GET"){
+        var curl_data = "curl -G " + host+path;
+        $(".modal").css("display","block");
+        $("#exampleModal").attr("class","modal");
+        $(".modal-body").html(curl_data);
+      }else if(method =="POST"){
+        if(type=="JSON"){
+          var curl_data ="curl -X POST " +host+path+ " -H 'Content-Type: application/json' -d '"+body+"'";
+          $(".modal").css("display","block");
+          $("#exampleModal").attr("class","modal");
+          $(".modal-body").html(curl_data);
+        }else if(type == "XML"){
+          var curl_data ="curl -X POST " +host+path+ " -H 'Content-Type: application/xml' -d '"+body+"'";
+          $(".modal").css("display","block");
+          $("#exampleModal").attr("class","modal");
+          $(".modal-body").html(curl_data);
+        }
+      }
     }
   </script>
   <body>
@@ -126,6 +174,10 @@
           <b>REQUEST BODY</b>
           <input class="form-control" type="text" name="body" id="body" placeholder="request body">
         </div>
+        <div class="form-group col-md-1">
+          <b>copy url</b>
+          <a onclick='copy();' style="color:#fff;" class="btn btn-primary">CURL</a>
+        </div>
       </div>
     </form>
       <div id="result"></div>
@@ -144,10 +196,25 @@
       <div class="form-row" style="padding-top:2%;">
         <b>RESPONSE BODY</b>
         <div id="div_body">
-
         </div>
       </div>
   </div>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">CURL COPY</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </body>
 </html>
