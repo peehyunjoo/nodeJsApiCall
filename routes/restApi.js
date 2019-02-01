@@ -17,6 +17,8 @@ exports.post = function (req, res,next) {
     var port ="";
 
     var host = host.split('//');
+    console.log(host[1]);
+    console.log(path);
     console.log(method);
     if(host[0] == "http:"){
       var port ="80";

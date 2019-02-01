@@ -44,6 +44,7 @@ app.post('/restApi', restApiRouter.post);
 app.get('/logout', usersRouter.logout);
 app.get('/api', apiRouter.api);
 app.post('/api', apiRouter.api_post);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
