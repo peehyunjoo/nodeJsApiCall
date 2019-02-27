@@ -15,16 +15,21 @@ exports.login = function (req, res) {
     var pwd = req.body.pwd;
     var HashPass=crypto.createHash("sha256").update(pwd).digest("hex");
     connection.query('select * from user WHERE id = ?', id, function(err, rows, fields){
-  		if(HashPass === rows[0].pwd){
-        console.log('로그인 성공');
-        req.session.user_id=id;
-        console.log(req.session.user_id);
-      //  req.session.save(function(){
-          res.redirect("main");
-        //});
-        //res.render('main', { user_id: req.session.user_id});
+  		if(rows.length == "0"){
+        //var user_check = "0";
+        res.redirect("main");
       }else{
-        res.render("index");
+        if(HashPass === rows[0].pwd){
+          console.log('로그인 성공');
+          req.session.user_id=id;
+          console.log(req.session.user_id);
+        //  req.session.save(function(){
+            res.redirect("main");
+          //});
+          //res.render('main', { user_id: req.session.user_id});
+        }else{
+          res.render("index");
+        }
       }
     });
 };
